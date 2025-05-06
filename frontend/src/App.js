@@ -1,22 +1,15 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ReservationsDashboard from './components/ReservationsDashboard';
 
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    axios.get('http://localhost:8000/api/hello')
-      .then(response => setMessage(response.data.message))
-      .catch(error => {
-        console.error('API call failed:', error);
-        setMessage('API call failed');
-      });
-  }, []);
-
   return (
-    <div className="App">
-      <h1>Hello, World!</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<ReservationsDashboard />} />
+        {/* Add more routes here */}
+      </Routes>
+    </Router>
   );
 }
 

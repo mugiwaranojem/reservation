@@ -15,10 +15,13 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->dateTime('reservation_time');
+            $table->integer('reservation_extension')->nullable()->default(0);
             $table->dateTime('pin_valid_start')->nullable();
             $table->string('pin_code')->unique();
+            $table->string('first_name')->nullable()->default(null);
+            $table->string('last_name')->nullable()->default(null);
+            $table->string('phone_number')->nullable()->default(null);
             $table->enum('status', ['pending', 'confirmed', 'expired'])->default('pending');
             $table->timestamps();
         });

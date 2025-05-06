@@ -19,7 +19,7 @@ class ReservationController extends Controller
 
     public function all(Request $request)
     {
-        $reservations = Reservation::all();
+        $reservations = Reservation::orderBy('reservation_time', 'desc')->get();
         return ReservationResource::collection($reservations);
     }
 
@@ -38,7 +38,9 @@ class ReservationController extends Controller
     {
         $validated = $request->validate([
             'reservation_time' => 'required|date|after:now',
-            'user_id' => 'required|exists:users,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:255'
         ]);
         $reservation = $this->reservationService->createReservation($validated);
         return new ReservationResource($reservation);
