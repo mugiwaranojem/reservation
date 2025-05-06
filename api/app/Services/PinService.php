@@ -18,10 +18,9 @@ class PinService
         $reservationTime = Carbon::parse($reservation->reservation_time);
         $reservation->pin_valid_start = $reservationTime->copy()->subMinutes(15);
 
-        // Generate unique 6-digit PIN
-        do {
-            $pin = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
-        } while (Reservation::where('pin_code', $pin)->exists());
+        $maxId = Reservation::max('id');
+        $random = str_pad(rand(0, 999999), 5, '0', STR_PAD_LEFT);
+        $pin = intval("$maxId$random");
 
         $reservation->pin_code = $pin;
     }

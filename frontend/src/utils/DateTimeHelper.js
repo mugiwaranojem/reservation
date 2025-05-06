@@ -24,3 +24,8 @@ export const appendTimezoneOffset = (dateTimeLocalStr) => {
 
     return dateTimeLocalStr + timezoneOffset;
 };
+
+export const toLocalTimezone = (utcStr) => {
+    const utcDate = new Date(utcStr.replace(' ', 'T') + 'Z');
+    return utcDate.toLocaleString();
+};

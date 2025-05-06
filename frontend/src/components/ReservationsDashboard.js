@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import ReservationFormModal from './ReservationFormModal';
 import AddIcon from '@mui/icons-material/Add';
+import { toLocalTimezone } from '../utils/DateTimeHelper';
 
 export default function ReservationsDashboard() {
   const [reservations, setReservations] = useState([]);
@@ -58,6 +59,10 @@ export default function ReservationsDashboard() {
 
   const handleReservationCreated = () => {
     fetchReservations(); 
+  };
+
+  const formatDateTime = (utcDateTime) => {
+    return toLocalTimezone(utcDateTime);
   };
 
   return (
@@ -112,12 +117,14 @@ export default function ReservationsDashboard() {
         onReservationCreated={handleReservationCreated}
       />
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ mb: 12 }}>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Time</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Phone</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Extension</TableCell>
             </TableRow>
@@ -133,7 +140,9 @@ export default function ReservationsDashboard() {
               reservations.map((reservation) => (
                 <TableRow hover sx={{ '&:hover': { backgroundColor: '#f5f5f5' } }} key={reservation.id}>
                   <TableCell>{reservation.id}</TableCell>
-                  <TableCell>{reservation.reservation_time}</TableCell>
+                  <TableCell>{formatDateTime(reservation.reservation_time)}</TableCell>
+                  <TableCell>{reservation.first_name} {reservation.last_name}</TableCell>
+                  <TableCell>{reservation.phone_number}</TableCell>
                   <TableCell
                     sx={{
                       color:
