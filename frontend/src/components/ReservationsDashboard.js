@@ -31,10 +31,12 @@ export default function ReservationsDashboard() {
     fetchReservations();
   }, []);
 
+  const baseUrl = 'http://localhost:8000/api';
+
   const fetchReservations = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8000/api/reservations');
+      const response = await axios.get(`${baseUrl}/reservations`);
       setReservations(response.data.data);
       setLoading(false);
     } catch (error) {
@@ -44,7 +46,7 @@ export default function ReservationsDashboard() {
 
   const handleConfirm = async () => {
     setConfirming(true);
-    await axios.post(`http://localhost:8000/api/reservations/${pin}/confirm`)
+    await axios.post(`${baseUrl}/reservations/${pin}/confirm`)
       .then(() => {
         setConfirmMessage('Reservation confirmed successfully.');
         setPin('');
@@ -122,7 +124,7 @@ export default function ReservationsDashboard() {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Time</TableCell>
+              <TableCell>Date & Time</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Phone</TableCell>
               <TableCell>Status</TableCell>

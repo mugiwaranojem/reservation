@@ -7,7 +7,7 @@ use App\Services\ReservationService;
 use App\Http\Resources\ReservationResource;
 use App\Services\PinService;
 use App\Models\Reservation;
-
+use Carbon\Carbon;
 class ReservationController extends Controller
 {
     public function __construct(
@@ -37,10 +37,27 @@ class ReservationController extends Controller
     public function create(Request $request)
     {
         $validated = $request->validate([
-            'reservation_time' => 'required|date|after:now',
+            'reservation_time' => [
+                'required',
+                'date',
+                'after:now',
+                function ($attribute, $value, $fail) {
+                    // Convert input to UTC and format it to 'Y-m-d H:i'
+                    $formattedInputUtc = Carbon::parse($value)->setTimezone('UTC')->format('Y-m-d H:i');
+        
+                    $exists = Reservation::whereRaw(
+                        "DATE_FORMAT(reservation_time, '%Y-%m-%d %H:%i') = ?", 
+                        [$formattedInputUtc]
+                    )->exists();
+        
+                    if ($exists) {
+                        $fail('The selected reservation time is already taken.');
+                    }
+                },
+            ],
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:255'
+            'phone_number' => 'required|string|max:255',
         ]);
         $reservation = $this->reservationService->createReservation($validated);
         return new ReservationResource($reservation);
